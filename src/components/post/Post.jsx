@@ -3,20 +3,21 @@ import "./post.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
+import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
-
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
   const likeHandler = () => {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await axios.get(`users/${post.userId}`);
+      const { data } = await axios.get(`/users?userId=${post.userId}`);
       setUser(data);
     };
     fetchUser();
@@ -26,16 +27,18 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <img
-              src={user.profilePicture || PF + "person/noAvatar.png"}
-              alt=""
-              className="postProfileImg"
-            />
+            <Link to={`profile/${user.userName}`}>
+              <img
+                src={user.profilePicture || PF + "person/noAvatar.png"}
+                alt=""
+                className="postProfileImg"
+              />
+            </Link>
             <span className="postUsername">{user.userName}</span>
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
-            <MoreVert className />
+            <MoreVert />
           </div>
         </div>
         <div className="postCenter">
