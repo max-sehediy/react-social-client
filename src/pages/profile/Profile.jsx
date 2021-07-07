@@ -5,6 +5,8 @@ import Topbar from "../../components/topbar/Topbar";
 import "./profile.css";
 
 export default function Profile() {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
   return (
     <>
       <Topbar />
@@ -14,15 +16,11 @@ export default function Profile() {
           <div className="profileRightTop">
             <div className="profileCover">
               <img
-                src="/assets/post/2.jpeg"
+                src={`${PF}post/2.jpeg`}
                 alt=""
                 className="profileCoverImg"
               />
-              <img
-                src="/assets/person/6.jpeg"
-                alt=""
-                className="profileUserImg"
-              />
+              <img src={`${PF}person/7.jpeg`} alt="" className="profileUserImg" />
             </div>
             <div className="profileInfo">
               <h4 className="profileInfoName">Maksym Sehediy</h4>
@@ -31,7 +29,7 @@ export default function Profile() {
           </div>
           <div className="profileRightTop">
             <Feed />
-            <Rightbar profile/>
+            <Rightbar profile />
           </div>
         </div>
       </div>
