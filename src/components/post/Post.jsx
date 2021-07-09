@@ -27,14 +27,14 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <Link to={`profile/${user.userName}`}>
+            <Link to={`profile/${user.username}`}>
               <img
                 src={user.profilePicture || PF + "person/noAvatar.png"}
                 alt=""
                 className="postProfileImg"
               />
             </Link>
-            <span className="postUsername">{user.userName}</span>
+            <span className="postUsername">{user.username}</span>
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
