@@ -1,3 +1,7 @@
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -5,6 +9,17 @@ import Topbar from "../../components/topbar/Topbar";
 import "./profile.css";
 
 export default function Profile() {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const [user, setUser] = useState({});
+  const { username } = useParams();
+  console.log(`username`, username);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await axios.get(`/users?username=${username}`);
+      setUser(data);
+    };
+    fetchUser();
+  }, [username]);
   return (
     <>
       <Topbar />
@@ -14,24 +29,24 @@ export default function Profile() {
           <div className="profileRightTop">
             <div className="profileCover">
               <img
-                src="/assets/post/2.jpeg"
+                src={user.coverPicture || PF + "person/noCover.png"}
                 alt=""
                 className="profileCoverImg"
               />
               <img
-                src="/assets/person/6.jpeg"
+                src={user.profilePicture || PF + "person/noAvatar.png"}
                 alt=""
                 className="profileUserImg"
               />
             </div>
             <div className="profileInfo">
-              <h4 className="profileInfoName">Maksym Sehediy</h4>
-              <span className="profileInfoDesc">Web Developer</span>
+              <h4 className="profileInfoName">{user.userName}</h4>
+              <span className="profileInfoDesc">{user.desc}</span>
             </div>
           </div>
           <div className="profileRightTop">
-            <Feed />
-            <Rightbar profile/>
+            <Feed username={username} />
+            <Rightbar user={user} />
           </div>
         </div>
       </div>
