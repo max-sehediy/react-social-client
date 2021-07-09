@@ -20,10 +20,10 @@ function App() {
         <Route exact path='/'>
           {user ? <Home /> : <Register />}
         </Route>
-        <Route path='/login'>
+        <Route exact path='/login'>
           {user ? <Redirect to='/' /> : <Login />}
         </Route>
-        <Route path='/register'>
+        <Route exact path='/register'>
           {user ? <Redirect to='/' /> : <Register />}
         </Route>
         <Route path='/profile/:username'>
