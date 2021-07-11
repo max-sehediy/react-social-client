@@ -9,18 +9,21 @@ import { useContext } from "react";
 
 export default function Feed({ username }) {
   const [posts, setPosts] = useState([]);
-  const { user } = useContext(AuthContext);
-
+  const { user, updatePost } = useContext(AuthContext);
   useEffect(() => {
     const fetchPosts = async () => {
+      console.log(`username`, username);
       const { data } = username
         ? await axios.get("/post/profile/" + username)
         : await axios.get("/post/timeline/" + user._id);
-      setPosts(data);
+      setPosts(
+        data.sort((p1, p2) => {
+          return new Date(p2.createdAt) - new Date(p1.createdAt);
+        })
+      );
     };
     fetchPosts();
-  }, [username,user._id]);
-
+  }, [username, user._id, updatePost]);
   return (
     <div className="feed">
       <div className="feedWrapper">

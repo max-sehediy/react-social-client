@@ -4,7 +4,8 @@ import AuthReducer from "./AuthReducer"
 const INITIAL_STATE = {
   user: null,
   isFetching: false,
-  error: false
+  error: false,
+  updatePost: null
 }
 
 export const AuthContext = createContext(INITIAL_STATE)
@@ -17,7 +18,9 @@ export const AuthContexProvider = ({ children }) => {
     <AuthContext.Provider value={{
       user: state.user,
       isFetching: state.isFetching,
-      error: state.error, dispatch
+      error: state.error,
+      updatePost: state.updatePost,
+      dispatch
     }}>
       {children}
     </AuthContext.Provider>

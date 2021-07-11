@@ -5,10 +5,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import axios from "axios";
 import { useRef } from "react";
+import { UPDATE_POST } from "../../context/AuthActions";
 
 export default function Share() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const name = user.username.charAt(0).toUpperCase() + user.username.slice(1);
   const desc = useRef();
   const [file, setFile] = useState(null);
@@ -24,7 +25,6 @@ export default function Share() {
       const fileName = Date.now() + file.name.slice(file.name.indexOf("."));
       data.append("file", file, fileName);
       newPost.img = fileName;
-      console.log(data);
       try {
         await axios.post("upload", data);
       } catch (error) {
@@ -33,6 +33,7 @@ export default function Share() {
     }
     try {
       await axios.post("/post", newPost);
+      dispatch({ type: UPDATE_POST, payload: Date.now() });
     } catch (error) {
       console.log(`error`, error);
     }
