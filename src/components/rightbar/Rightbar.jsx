@@ -1,10 +1,24 @@
 import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 export default function Rightbar({ user }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
+  // const { user: currentUser, dispatch } = useContext(AuthContext);
+  const [friends, setFriends] = useState([]);
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await axios.get("/users/friends/" + user._id);
+      setFriends(data);
+    };
+    getUser();
+  }, [user._id]);
   const HomeRightbar = () => {
     return (
       <>
@@ -48,43 +62,25 @@ export default function Rightbar({ user }) {
             </span>
           </div>
         </div>
-        <div className="rightbarFollowing">
-          <img
-            src={`${PF}person/7.jpeg`}
-            alt=""
-            className="rightbarFollowingImg"
-          />
-          <span className="rightbarFollowing Name">John Carter</span>
+        <h4 className="rightbarTitle">User friends</h4>
+        <div className="rightbarFollowings">
+          {friends.map((friend) => (
+            <Link to={`/profile/${friend.username}`} key={friend._id}>
+              <div className="rightbarFollowing">
+                <img
+                  src={
+                    friend.profilePicture
+                      ? `${PF}person/${friend.profilePicture}`
+                      : `${PF}person/noAvatar.png`
+                  }
+                  alt=""
+                  className="rightbarFollowingImg"
+                />
+                <span className="rightbarFollowingName">{friend.usernamr}</span>
+              </div>
+            </Link>
+          ))}
         </div>
-        <h4 className="rightbarFollowings"></h4>
-        <div className="rightbarFollowing">
-          <img
-            src="/assets/person/7.jpeg"
-            alt=""
-            className="rightbarFollowingImg"
-          />
-          <span className="rightbarFollowing Name">John Carter</span>
-        </div>
-        <h4 className="rightbarFollowings">
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/7.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowing Name">John Carter</span>
-          </div>
-        </h4>
-        <h4 className="rightbarFollowings">
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/7.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowing Name">John Carter</span>
-          </div>
-        </h4>
       </>
     );
   };
