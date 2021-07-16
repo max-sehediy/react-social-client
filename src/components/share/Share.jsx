@@ -1,16 +1,18 @@
-import { Label, PermMedia, Room, EmojiEmotions } from "@material-ui/icons";
-import { useContext } from "react";
 import "./share.css";
+import {
+  PermMedia,
+  Label,
+  Room,
+  EmojiEmotions,
+  Cancel,
+} from "@material-ui/icons";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useState } from "react";
 import axios from "axios";
-import { useRef } from "react";
-import { UPDATE_POST } from "../../context/AuthActions";
 
 export default function Share() {
+  const { user } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user, dispatch } = useContext(AuthContext);
-  const name = user.username.charAt(0).toUpperCase() + user.username.slice(1);
   const desc = useRef();
   const [file, setFile] = useState(null);
 
@@ -22,55 +24,59 @@ export default function Share() {
     };
     if (file) {
       const data = new FormData();
-      const fileName = Date.now() + file.name.slice(file.name.indexOf("."));
-      data.append("file", file, fileName);
+      const fileName = Date.now() + file.name;
+      data.append("name", fileName);
+      data.append("file", file);
       newPost.img = fileName;
+      console.log(newPost);
       try {
-        await axios.post("upload", data);
-      } catch (error) {
-        console.log(`error`, error);
-      }
+        await axios.post("/upload", data);
+      } catch (err) {}
     }
     try {
-      await axios.post("/post", newPost);
-      dispatch({ type: UPDATE_POST, payload: Date.now() });
-    } catch (error) {
-      console.log(`error`, error);
-    }
+      await axios.post("/posts", newPost);
+      window.location.reload();
+    } catch (err) {}
   };
+
   return (
     <div className="share">
       <div className="shareWrapper">
         <div className="shareTop">
           <img
+            className="shareProfileImg"
             src={
               user.profilePicture
-                ? `${PF}person/${user.profilePicture}`
+                ? PF + user.profilePicture
                 : PF + "person/noAvatar.png"
             }
             alt=""
-            className="shareProfileImg"
           />
           <input
-            placeholder={`What's in your mind, ${name}?`}
+            placeholder={"What's in your mind " + user.username + "?"}
             className="shareInput"
             ref={desc}
           />
         </div>
         <hr className="shareHr" />
+        {file && (
+          <div className="shareImgContainer">
+            <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
+            <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
+          </div>
+        )}
         <form className="shareBottom" onSubmit={submitHandler}>
           <div className="shareOptions">
             <label htmlFor="file" className="shareOption">
               <PermMedia htmlColor="tomato" className="shareIcon" />
               <span className="shareOptionText">Photo or Video</span>
               <input
+                style={{ display: "none" }}
                 type="file"
                 id="file"
-                style={{ display: "none" }}
-                accept=".png,.jpeg,jpg"
+                accept=".png,.jpeg,.jpg"
                 onChange={(e) => setFile(e.target.files[0])}
               />
-              {/* <input type="file" id="file" accept="image/*" /> */}
             </label>
             <div className="shareOption">
               <Label htmlColor="blue" className="shareIcon" />
