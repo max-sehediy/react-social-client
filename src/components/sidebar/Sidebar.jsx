@@ -1,15 +1,15 @@
-import {
-  Bookmark,
-  Chat,
-  Event,
-  Group,
-  HelpOutline,
-  PlayCircleFilledOutlined,
-  RssFeed,
-  School,
-  WorkOutline,
-} from "@material-ui/icons";
 import "./sidebar.css";
+import {
+  RssFeed,
+  Chat,
+  PlayCircleFilledOutlined,
+  Group,
+  Bookmark,
+  HelpOutline,
+  WorkOutline,
+  Event,
+  School,
+} from "@material-ui/icons";
 import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
 
@@ -55,7 +55,7 @@ export default function Sidebar() {
             <span className="sidebarListItemText">Courses</span>
           </li>
         </ul>
-        <button className="sidebarButton">Show more</button>
+        <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
           {Users.map((u) => (
