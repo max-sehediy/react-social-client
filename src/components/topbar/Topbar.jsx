@@ -3,10 +3,20 @@ import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { Button } from "@material-ui/core";
+import { logout } from "../../http/logout";
+// import { deleteUser } from "../../http/delete";
 
 export default function Topbar() {
   const { user } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  //!
+  const logoutUser = async () => {
+    const out = await logout();
+    console.log(out);
+  };
+  // !
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -26,7 +36,16 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
           <span className="topbarLink">Homepage</span>
-          <span className="topbarLink">Timeline</span>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={logoutUser}
+          >
+            {/* <span className="topbarLink"> */}
+            Log out
+            {/* </span> */}
+          </Button>
         </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
@@ -34,8 +53,10 @@ export default function Topbar() {
             <span className="topbarIconBadge">1</span>
           </div>
           <div className="topbarIconItem">
-            <Chat />
-            <span className="topbarIconBadge">2</span>
+            <Link to={"/messenger"}>
+              <Chat />
+              <span className="topbarIconBadge">2</span>
+            </Link>
           </div>
           <div className="topbarIconItem">
             <Notifications />

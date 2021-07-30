@@ -12,8 +12,20 @@ import {
 } from "@material-ui/icons";
 import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
-
+import { useEffect } from "react";
+import { allUsers } from "../../http/getAllUsers";
+import { useState } from "react";
+//
 export default function Sidebar() {
+  const [fetchUsers, setFetchUsers] = useState([]);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      const data = await allUsers();
+      setFetchUsers(data);
+    };
+    getAllUsers();
+  }, []);
+  //
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -58,8 +70,13 @@ export default function Sidebar() {
         <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
+          {fetchUsers
+            ? fetchUsers.map((u) => <CloseFriend key={u.id} user={u} />)
+            : "wait for loading"}
+        </ul>
+        <ul className="sidebarFriendList">
           {Users.map((u) => (
-            <CloseFriend key={u.id} user={u} />
+            <CloseFriend key={u.id} user={u} fake/>
           ))}
         </ul>
       </div>
