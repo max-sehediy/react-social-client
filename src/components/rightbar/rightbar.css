@@ -91,10 +91,14 @@
   border-radius: 5px;
   padding: 5px 10px;
   display: flex;
+  justify-content:space-between;
   align-items: center;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+}
+.edit{
+  width: 80px;;
 }
 
 .rightbarFollowButton:focus{

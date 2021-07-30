@@ -6,6 +6,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { Add, Remove } from "@material-ui/icons";
+import EditUserData from "../../utils/modal/editUser/EditUserData";
+import EditIcon from "@material-ui/icons/Edit";
 
 export default function Rightbar({ user }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -14,7 +16,10 @@ export default function Rightbar({ user }) {
   const [followed, setFollowed] = useState(
     currentUser.followings.includes(user?.id)
   );
-
+  console.log(`currentUser`, currentUser);
+  console.log(`user`, user);
+  const [userDataVisible, setUserDataVisible] = useState(false);
+  console.log(`userRightbar`, user);
   useEffect(() => {
     const getFriends = async () => {
       try {
@@ -42,10 +47,6 @@ export default function Rightbar({ user }) {
       }
       setFollowed(!followed);
     } catch (err) {}
-  };
-
-  const logOut = () => {
-    
   };
 
   const HomeRightbar = () => {
@@ -98,9 +99,15 @@ export default function Rightbar({ user }) {
             </span>
           </div>
         </div>
-        <div className="button logout" onClick={logOut}>
-          Log out
-        </div>
+        {currentUser.username === user.username ? (
+          <button
+            type="button"
+            className="rightbarFollowButton edit"
+            onClick={() => setUserDataVisible(true)}
+          >
+            Edit <EditIcon />
+          </button>
+        ) : null}
         <h4 className="rightbarTitle">User friends</h4>
         <div className="rightbarFollowings">
           {friends.map((friend) => (
@@ -131,6 +138,10 @@ export default function Rightbar({ user }) {
       <div className="rightbarWrapper">
         {user ? <ProfileRightbar /> : <HomeRightbar />}
       </div>
+      <EditUserData
+        onHide={() => setUserDataVisible(false)}
+        show={userDataVisible}
+      />
     </div>
   );
 }
