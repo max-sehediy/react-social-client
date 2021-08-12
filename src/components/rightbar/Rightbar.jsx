@@ -1,54 +1,99 @@
 import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
-import { useContext, useEffect, useState } from "react";
+import {
+  //  useContext,
+  useEffect,
+  useState,
+} from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { Link, useHistory } from "react-router-dom";
+// import { AuthContext } from "../../context/AuthContext";
 import { Add, Remove } from "@material-ui/icons";
 import EditUserData from "../../utils/modal/editUser/EditUserData";
 import EditIcon from "@material-ui/icons/Edit";
-
+// import { axiosJWT } from "../../http";
+import { useDispatch, useSelector } from "react-redux";
+import { FOLLOW, UNFOLLOW } from "../../store-redux/user/user";
+import { axiosJWT } from "../../http";
+import { getConversations } from "../../store-redux/conversation/conversationStore";
+//
+//
 export default function Rightbar({ user }) {
+  // const { user: currentUser, dispatch } = useContext(AuthContext);
+  // const conversation = useSelector((state) => state.conversation);
+  //
+  const dispatch = useDispatch();
+  const history = useHistory();
+  //
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
-  const { user: currentUser, dispatch } = useContext(AuthContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const conversation = useSelector((state) => state.conversation);
   const [followed, setFollowed] = useState(
     currentUser.followings.includes(user?.id)
   );
-  console.log(`currentUser`, currentUser);
-  console.log(`user`, user);
   const [userDataVisible, setUserDataVisible] = useState(false);
-  console.log(`userRightbar`, user);
+  //****** */
+  //
+
   useEffect(() => {
     const getFriends = async () => {
-      try {
-        const friendList = await axios.get("/users/friends/" + user._id);
-        setFriends(friendList.data);
-      } catch (err) {
-        console.log(err);
+      if (user) {
+        console.log("user undefined", user || currentUser);
+        try {
+          const friendList = await axiosJWT.get("/users/friends/" + user._id);
+          return setFriends(friendList.data);
+        } catch (err) {
+          return console.log(err.response);
+        }
       }
     };
     getFriends();
   }, [user]);
-
+  //******* */
+  //
+  const goToConversation = async () => {
+    let createConversation =
+      conversation.conversations?.some((c) => c === user._id) || false;
+    createConversation && history.push("/messenger");
+    if (!createConversation) {
+      try {
+        const { data } = await axiosJWT.post("/conversations/", {
+          senderId: currentUser._id,
+          receiverId: user._id,
+        });
+        if (data) {
+          dispatch(getConversations(currentUser._id));
+          history.push("/messenger");
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  };
+  //
   const handleClick = async () => {
     try {
       if (followed) {
         await axios.put(`/users/${user._id}/unfollow`, {
           userId: currentUser._id,
         });
-        dispatch({ type: "UNFOLLOW", payload: user._id });
+        // dispatch({ type: "UNFOLLOW", payload: user._id });
+        dispatch(UNFOLLOW(user._id));
       } else {
         await axios.put(`/users/${user._id}/follow`, {
           userId: currentUser._id,
         });
-        dispatch({ type: "FOLLOW", payload: user._id });
+        // dispatch({ type: "FOLLOW", payload: user._id });
+        dispatch(FOLLOW(user._id));
       }
       setFollowed(!followed);
-    } catch (err) {}
+    } catch (err) {
+      console.log("follow/unFollow", err.message);
+    }
   };
-
+  // ********
   const HomeRightbar = () => {
     return (
       <>
@@ -107,28 +152,37 @@ export default function Rightbar({ user }) {
           >
             Edit <EditIcon />
           </button>
-        ) : null}
+        ) : (
+          <button className="rightbarFollowButton" onClick={goToConversation}>
+            Send a message
+          </button>
+        )}
         <h4 className="rightbarTitle">User friends</h4>
         <div className="rightbarFollowings">
-          {friends.map((friend) => (
-            <Link
-              to={"/profile/" + friend.username}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="rightbarFollowing">
-                <img
-                  src={
-                    friend.profilePicture
-                      ? PF + friend.profilePicture
-                      : PF + "person/noAvatar.png"
-                  }
-                  alt=""
-                  className="rightbarFollowingImg"
-                />
-                <span className="rightbarFollowingName">{friend.username}</span>
-              </div>
-            </Link>
-          ))}
+          {friends
+            ? friends.map((friend) => (
+                <Link
+                  key={friend._id}
+                  to={"/profile/" + friend.username}
+                  style={{ textDecoration: "none" }}
+                >
+                  <div className="rightbarFollowing">
+                    <img
+                      src={
+                        friend.profilePicture
+                          ? PF + friend.profilePicture
+                          : PF + "person/noAvatar.png"
+                      }
+                      alt=""
+                      className="rightbarFollowingImg"
+                    />
+                    <span className="rightbarFollowingName">
+                      {friend.username}
+                    </span>
+                  </div>
+                </Link>
+              ))
+            : "Loading"}
         </div>
       </>
     );

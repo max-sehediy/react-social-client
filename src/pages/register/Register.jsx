@@ -1,32 +1,45 @@
 import axios from "axios";
-import { useRef } from "react";
+// import { useRef } from "react";
 import "./register.css";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function Register() {
-  const username = useRef();
-  const email = useRef();
-  const password = useRef();
-  const passwordAgain = useRef();
+  // const username = useRef();
+  // const email = useRef();
+  // const password = useRef();
+  // const passwordAgainRef = useRef();
+  const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [passwordAgain, setPasswordAgain] = useState(null);
+  const [match, setMatch] = useState(true);
   const history = useHistory();
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if (passwordAgain.current.value !== password.current.value) {
-      passwordAgain.current.setCustomValidity("Passwords don't match!");
+    // if (passwordAgain.current.value !== password.current.value) {
+    // passwordAgainRef.current.setCustomValidity("Passwords don't match!");
+    if (password !== passwordAgain) {
+      setMatch(false);
     } else {
+      setMatch(true);
       const user = {
-        username: username.current.value,
-        email: email.current.value,
-        password: password.current.value,
+        // username: username.current.value,
+        // email: email.current.value,
+        // password: password.current.value,
+        username,
+        email,
+        password,
       };
       try {
         await axios.post("/auth/register", user);
-        history.push("/");
+        history.push("/login");
       } catch (err) {
         console.log(err.response);
       }
+      console.log(user);
     }
   };
 
@@ -44,20 +57,23 @@ export default function Register() {
             <input
               placeholder="Username"
               required
-              ref={username}
+              // ref={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="loginInput"
             />
             <input
               placeholder="Email"
               required
-              ref={email}
+              // ref={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="loginInput"
               type="email"
             />
             <input
               placeholder="Password"
               required
-              ref={password}
+              // ref={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="loginInput"
               type="password"
               minLength="3"
@@ -65,10 +81,20 @@ export default function Register() {
             <input
               placeholder="Password Again"
               required
-              ref={passwordAgain}
+              // ref={passwordAgainRef}
+              onChange={(e) => setPasswordAgain(e.target.value)}
               className="loginInput"
               type="password"
             />
+            <p
+              style={{
+                marginBottom: "7px",
+                color: "darkred",
+                visibility: match ? "hidden" : "visible",
+              }}
+            >
+              The password and confirm password fields do not match.
+            </p>
             <button className="loginButton" type="submit">
               Sign Up
             </button>

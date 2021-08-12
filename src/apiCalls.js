@@ -7,7 +7,6 @@ export const loginCall = async (userCredential, dispatch) => {
     const response = await axios.post("/auth/login", userCredential);
     const { data } = response
     const user = jwt_decode(data.accessToken)
-    console.log(user)
     localStorage.setItem('tokens', JSON.stringify(data))
     localStorage.setItem('user', JSON.stringify(user.user))
     dispatch({ type: "LOGIN_SUCCESS", payload: user.user });
