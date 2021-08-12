@@ -17,7 +17,6 @@ axiosJWT.interceptors.request.use(async (config) => {
   } else {
     config.headers['authorization'] = `Bearer ${JSON.parse(localStorage.getItem('tokens')).accessToken}`
   }
-
   return config
 },
   err => { return Promise.reject(err) }

@@ -68,8 +68,9 @@
 
 .topbarIconItem {
   margin-right: 15px;
-  cursor: pointer;
+  /* cursor: pointer; */
   position: relative;
+  cursor: no-drop;
 }
 
 .topbarIconBadge {
@@ -95,8 +96,8 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 768px)  {
-  .topbarLink{
+@media screen and (max-width: 768px) {
+  .topbarLink {
     display: none;
   }
 }

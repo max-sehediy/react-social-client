@@ -71,8 +71,8 @@ export default function Sidebar() {
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
           {fetchUsers
-            ? fetchUsers.map((u) => <CloseFriend key={u.id} user={u} />)
-            : "wait for loading"}
+            ? fetchUsers.map((u) => <CloseFriend key={u._id} user={u} />)
+            : "Loading"}
         </ul>
         <ul className="sidebarFriendList">
           {Users.map((u) => (

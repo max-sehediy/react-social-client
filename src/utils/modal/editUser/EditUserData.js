@@ -1,5 +1,5 @@
 import './editUser.css'
-import React, { useContext } from 'react';
+// import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,10 +9,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { makeStyles } from '@material-ui/core/styles';
-import { AuthContext } from '../../../context/AuthContext';
+// import { AuthContext } from '../../../context/AuthContext';
 import { useState } from 'react';
-import { Box } from '@material-ui/core';
-import axios from 'axios';
+import { Box, Fab } from '@material-ui/core';
+import { AddPhotoAlternate } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { TAKENEWDATA, updateUser } from '../../../store-redux/user/user';
+import { axiosJWT } from '../../../http';
 
 
 
@@ -23,25 +26,48 @@ const useStyles = makeStyles((theme) => ({
   input: {
     margin: theme.spacing(1, 0)
   },
-  // color:{
-  //   green: theme.palette.text
-  // }
 
 }));
 export default function EditUserData({ onHide, show }) {
+  // const { user } = useContext(AuthContext)
   const classes = useStyles();
-  const { user } = useContext(AuthContext)
-  // user data
-  const [desc, setDesc] = useState(user?.desc)
-  const [city, setCity] = useState(user?.city)
-  const [from, setFrom] = useState(user?.from)
-
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  // user data currentUser
+  const [desc, setDesc] = useState(user.currentUser?.desc || '')
+  const [city, setCity] = useState(user.currentUser?.city || '')
+  const [from, setFrom] = useState(user.currentUser?.from || '')
+  const [profilePicture, setProfilePicture] = useState(user.currentUser?.profilePicture || '')
+  const [file, setFile] = useState(null)
 
   const saveNewData = async () => {
-    const newUserData = { desc, city, from, userId: user._id }
-    const { data } = await axios.put('/users/' + user._id, newUserData)
-    console.log(data.message)
+    if (file) {
+      let fileName = Date.now() + file.name
+      const data = new FormData()
+      data.append('file', file, fileName)
+      setProfilePicture(fileName)
+      try {
+        await axiosJWT.post('/upload', data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    const newUserData = {
+      desc, city, from,
+      profilePicture,
+      userId: user.currentUser._id,
+    }
     onHide()
+    try {
+      await dispatch(updateUser(newUserData))
+      dispatch(TAKENEWDATA())
+    } catch (error) {
+      if (error.response?.status === 403) {
+        localStorage.clear()
+        document.location.reload()
+      }
+      console.log(error)
+    }
   }
   return (
     <div>
@@ -73,10 +99,30 @@ export default function EditUserData({ onHide, show }) {
             <TextField
               className={classes.input}
               id="from"
-              label="Where you from"
+              label="Where you come from ?"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
             />
+
+            <label htmlFor="upload-photo">
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                accept=".png,.jpeg,.jpg"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <Fab
+                color="secondary"
+                size="small"
+                component="span"
+                aria-label="add"
+                variant="extended"
+              >
+                <AddPhotoAlternate /> Change your avatar
+              </Fab>
+            </label>
           </Box>
         </DialogContent>
         <DialogActions>
@@ -88,7 +134,7 @@ export default function EditUserData({ onHide, show }) {
             variant="contained"
             startIcon={<CloudUploadIcon />}
           >
-            Upload
+            Save
           </Button>
 
         </DialogActions>

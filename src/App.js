@@ -8,12 +8,14 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+// import { useContext } from "react";
+// import { AuthContext } from "./context/AuthContext";
 import Messenger from "./pages/messenger/Messenger";
+import { useSelector } from 'react-redux'
 
 function App() {
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const user = useSelector(state => state.user.currentUser)
   return (
     <Router>
       <Switch>

@@ -1,23 +1,31 @@
-import { useContext, useRef } from "react";
+// import { useContext, useRef } from "react";
 import "./login.css";
-import { loginCall } from "../../apiCalls";
-import { AuthContext } from "../../context/AuthContext";
+// import { loginCall } from "../../apiCalls";
+// import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress } from "@material-ui/core";
-import { Link } from "react-router-dom";
-
-
+import { Link, useHistory } from "react-router-dom";
+import { useState } from "react";
+import { loginCall } from "../../store-redux/user/user";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Login() {
-  const email = useRef();
-  const password = useRef();
-  const { isFetching, dispatch } = useContext(AuthContext);
-
-  const handleClick = (e) => {
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  // const email = useRef();
+  // const password = useRef();
+  // const { isFetching, dispatch } = useContext(AuthContext);
+  const handleClick = async (e) => {
     e.preventDefault();
-    loginCall(
-      { email: email.current.value, password: password.current.value },
-      dispatch
-    );
+    try {
+      const data = { email, password };
+      await dispatch(loginCall(data));
+      history.push("/");
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return (
@@ -36,7 +44,8 @@ export default function Login() {
               type="email"
               required
               className="loginInput"
-              ref={email}
+              // ref={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               placeholder="Password"
@@ -44,10 +53,15 @@ export default function Login() {
               required
               minLength="3"
               className="loginInput"
-              ref={password}
+              // ref={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button className="loginButton" type="submit" disabled={isFetching}>
-              {isFetching ? (
+            <button
+              className="loginButton"
+              type="submit"
+              // disabled={isFetching}
+            >
+              {user.pending ? (
                 <CircularProgress color="primary" size="20px" />
               ) : (
                 "Log In"

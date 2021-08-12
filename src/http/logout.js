@@ -1,13 +1,13 @@
-import { axiosJWT } from ".";
+import axios from "axios";
 
 
 
 export const logout = async () => {
-
   try {
-    const { data } = await axiosJWT.post("/auth/login/logout", {
+    const { data } = await axios.post("/auth/login/logout", {
       data: {
-        refreshToken: localStorage.getItem("tokens").refreshToken,
+        // refreshToken: localStorage.getItem("tokens").refreshToken,
+        id: JSON.parse(localStorage.getItem('tokens')).id
       },
     });
     if (data.logout) {
@@ -17,6 +17,6 @@ export const logout = async () => {
     }
     else return data
   } catch (error) {
-    console.log(`error=>`, error.response.data);
+    console.log( 'logout',error.response);
   }
 };

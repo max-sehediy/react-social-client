@@ -6,12 +6,16 @@ import {
   EmojiEmotions,
   Cancel,
 } from "@material-ui/icons";
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { 
+  // useContext,
+   useRef, useState } from "react";
+// import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { useSelector } from 'react-redux'
 
 export default function Share() {
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const user = useSelector(state => state.user.currentUser)
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
   const [file, setFile] = useState(null);

@@ -6,11 +6,15 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
+import { getConversations } from "../../store-redux/conversation/conversationStore";
+import { useDispatch, useSelector } from "react-redux";
+// import { viewUserFetch } from "../../store-redux/viewUser/viewUserStore";
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
-  console.log(`user`, user)
   const username = useParams().username;
 
   useEffect(() => {
@@ -19,8 +23,15 @@ export default function Profile() {
       setUser(res.data);
     };
     fetchUser();
+    // dispatch(viewUserFetch(username));
   }, [username]);
-
+  useEffect(() => {
+    const getConver = () => {
+      dispatch(getConversations(currentUser._id));
+    };
+    getConver();
+  }, [currentUser]);
+  //
   return (
     <>
       <Topbar />

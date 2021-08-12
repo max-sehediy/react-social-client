@@ -3,12 +3,19 @@ import Topbar from "../../components/topbar/Topbar";
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import {
+  // useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+// import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { io } from "socket.io-client";
+import { useSelector } from "react-redux";
 
 export default function Messenger() {
+  const user = useSelector((state) => state.user.currentUser);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -16,7 +23,7 @@ export default function Messenger() {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
   const scrollRef = useRef();
 
   useEffect(() => {
@@ -29,7 +36,6 @@ export default function Messenger() {
       });
     });
   }, []);
-
   useEffect(() => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
@@ -63,7 +69,7 @@ export default function Messenger() {
         const res = await axios.get("/messages/" + currentChat?._id);
         setMessages(res.data);
       } catch (err) {
-        console.log(err);
+        console.log(err.response);
       }
     };
     getMessages();
@@ -108,7 +114,7 @@ export default function Messenger() {
           <div className="chatMenuWrapper">
             <input placeholder="Search for friends" className="chatMenuInput" />
             {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
+              <div onClick={() => setCurrentChat(c)} key={c._id}>
                 <Conversation conversation={c} currentUser={user} />
               </div>
             ))}
@@ -121,7 +127,11 @@ export default function Messenger() {
                 <div className="chatBoxTop">
                   {messages.map((m) => (
                     <div ref={scrollRef}>
-                      <Message message={m} own={m.sender === user._id} />
+                      <Message
+                        key={m._id}
+                        message={m}
+                        own={m.sender === user._id}
+                      />
                     </div>
                   ))}
                 </div>

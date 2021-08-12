@@ -1,20 +1,21 @@
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+// import { useContext } from "react";
+// import { AuthContext } from "../../context/AuthContext";
 import { Button } from "@material-ui/core";
 import { logout } from "../../http/logout";
 // import { deleteUser } from "../../http/delete";
-
+import { useSelector } from "react-redux";
+//
+//
 export default function Topbar() {
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const user = useSelector((state) => state.user.currentUser);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
   //!
-  const logoutUser = async () => {
-    const out = await logout();
-    console.log(out);
+  const logoutUser = () => {
+    logout();
   };
   // !
   return (
