@@ -14,7 +14,6 @@
   object-fit: cover;
   margin-right: 10px;
 }
-/* 
-.sidebarFriendName:visited{
-  color: black;
-} */
+.sidebarFriendName {
+  text-transform: capitalize;
+}

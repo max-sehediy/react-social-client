@@ -58,7 +58,6 @@ export default function EditUserData({ onHide, show }) {
       userId: user.currentUser._id,
     }
     onHide()
-    console.log(newUserData)
     try {
       dispatch(updateUser(newUserData))
     } catch (error) {
