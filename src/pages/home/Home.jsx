@@ -5,14 +5,6 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import "./home.css";
 
 export default function Home() {
-  // useEffect(() => {
-  // console.log(localStorage.getItem("user"));
-  // loginCall(
-  //   { email: email.current.value, password: password.current.value },
-  //   dispatch
-  // );
-  // localStorage.setItem("user", JSON.stringify(state.user));
-  // }, []);
   return (
     <>
       <Topbar />

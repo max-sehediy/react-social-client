@@ -15,7 +15,8 @@ import CloseFriend from "../closeFriend/CloseFriend";
 import { useEffect } from "react";
 import { allUsers } from "../../http/getAllUsers";
 import { useState } from "react";
-//
+
+
 export default function Sidebar() {
   const [fetchUsers, setFetchUsers] = useState([]);
   useEffect(() => {
@@ -25,7 +26,6 @@ export default function Sidebar() {
     };
     getAllUsers();
   }, []);
-  //
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">

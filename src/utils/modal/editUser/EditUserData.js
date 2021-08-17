@@ -1,5 +1,4 @@
 import './editUser.css'
-// import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,12 +8,15 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { makeStyles } from '@material-ui/core/styles';
-// import { AuthContext } from '../../../context/AuthContext';
-import { useState } from 'react';
+import {
+  useState
+} from 'react';
 import { Box, Fab } from '@material-ui/core';
 import { AddPhotoAlternate } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { TAKENEWDATA, updateUser } from '../../../store-redux/user/user';
+import {
+  updateUser,
+} from '../../../store-redux/user/user';
 import { axiosJWT } from '../../../http';
 
 
@@ -29,23 +31,21 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 export default function EditUserData({ onHide, show }) {
-  // const { user } = useContext(AuthContext)
   const classes = useStyles();
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
-  // user data currentUser
   const [desc, setDesc] = useState(user.currentUser?.desc || '')
   const [city, setCity] = useState(user.currentUser?.city || '')
   const [from, setFrom] = useState(user.currentUser?.from || '')
-  const [profilePicture, setProfilePicture] = useState(user.currentUser?.profilePicture || '')
   const [file, setFile] = useState(null)
 
   const saveNewData = async () => {
+    let profPict = user.currentUser?.profilePicture || ''
     if (file) {
       let fileName = Date.now() + file.name
       const data = new FormData()
       data.append('file', file, fileName)
-      setProfilePicture(fileName)
+      profPict = fileName
       try {
         await axiosJWT.post('/upload', data)
       } catch (error) {
@@ -54,13 +54,13 @@ export default function EditUserData({ onHide, show }) {
     }
     const newUserData = {
       desc, city, from,
-      profilePicture,
+      profilePicture: profPict,
       userId: user.currentUser._id,
     }
     onHide()
+    console.log(newUserData)
     try {
-      await dispatch(updateUser(newUserData))
-      dispatch(TAKENEWDATA())
+      dispatch(updateUser(newUserData))
     } catch (error) {
       if (error.response?.status === 403) {
         localStorage.clear()
@@ -84,7 +84,6 @@ export default function EditUserData({ onHide, show }) {
             <TextField
               id="desc"
               label="Description"
-              // helperText="Some important text"
               value={desc}
               className={classes.input}
               onChange={(e) => setDesc(e.target.value)}

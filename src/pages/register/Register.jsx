@@ -1,15 +1,10 @@
 import axios from "axios";
-// import { useRef } from "react";
 import "./register.css";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export default function Register() {
-  // const username = useRef();
-  // const email = useRef();
-  // const password = useRef();
-  // const passwordAgainRef = useRef();
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -19,16 +14,11 @@ export default function Register() {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    // if (passwordAgain.current.value !== password.current.value) {
-    // passwordAgainRef.current.setCustomValidity("Passwords don't match!");
     if (password !== passwordAgain) {
       setMatch(false);
     } else {
       setMatch(true);
       const user = {
-        // username: username.current.value,
-        // email: email.current.value,
-        // password: password.current.value,
         username,
         email,
         password,
@@ -57,14 +47,12 @@ export default function Register() {
             <input
               placeholder="Username"
               required
-              // ref={username}
               onChange={(e) => setUsername(e.target.value)}
               className="loginInput"
             />
             <input
               placeholder="Email"
               required
-              // ref={email}
               onChange={(e) => setEmail(e.target.value)}
               className="loginInput"
               type="email"
@@ -72,7 +60,6 @@ export default function Register() {
             <input
               placeholder="Password"
               required
-              // ref={password}
               onChange={(e) => setPassword(e.target.value)}
               className="loginInput"
               type="password"
@@ -81,7 +68,6 @@ export default function Register() {
             <input
               placeholder="Password Again"
               required
-              // ref={passwordAgainRef}
               onChange={(e) => setPasswordAgain(e.target.value)}
               className="loginInput"
               type="password"

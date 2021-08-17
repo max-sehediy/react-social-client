@@ -3,27 +3,23 @@ import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  useEffect,
+} from "react";
 import { useParams } from "react-router";
 import { getConversations } from "../../store-redux/conversation/conversationStore";
 import { useDispatch, useSelector } from "react-redux";
-// import { viewUserFetch } from "../../store-redux/viewUser/viewUserStore";
+import { viewUserFetch } from "../../store-redux/viewUser/viewUserStore";
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const currentUser = useSelector((state) => state.user.currentUser);
+  const user = useSelector((state) => state.viewUser.viewUser);
   const dispatch = useDispatch();
-  const [user, setUser] = useState({});
   const username = useParams().username;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios.get(`/users?username=${username}`);
-      setUser(res.data);
-    };
-    fetchUser();
-    // dispatch(viewUserFetch(username));
+    dispatch(viewUserFetch(username));
   }, [username]);
   useEffect(() => {
     const getConver = () => {
@@ -31,7 +27,6 @@ export default function Profile() {
     };
     getConver();
   }, [currentUser]);
-  //
   return (
     <>
       <Topbar />
@@ -43,7 +38,7 @@ export default function Profile() {
               <img
                 className="profileCoverImg"
                 src={
-                  user.coverPicture
+                  user?.coverPicture
                     ? PF + user.coverPicture
                     : PF + "person/noCover.png"
                 }
@@ -52,7 +47,7 @@ export default function Profile() {
               <img
                 className="profileUserImg"
                 src={
-                  user.profilePicture
+                  user?.profilePicture
                     ? PF + user.profilePicture
                     : PF + "person/noAvatar.png"
                 }
@@ -60,8 +55,8 @@ export default function Profile() {
               />
             </div>
             <div className="profileInfo">
-              <h4 className="profileInfoName">{user.username}</h4>
-              <span className="profileInfoDesc">{user.desc}</span>
+              <h4 className="profileInfoName">{user?.username}</h4>
+              <span className="profileInfoDesc">{user?.desc}</span>
             </div>
           </div>
           <div className="profileRightBottom">

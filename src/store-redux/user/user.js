@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-// reducer
 export const loginCall = createAsyncThunk(
   'user/loginCall',
   async (userCredential, { rejectWithValue }) => {
@@ -18,7 +17,6 @@ export const loginCall = createAsyncThunk(
     }
   }
 )
-// update user's data
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (newUserData, { rejectWithValue }) => {
@@ -41,11 +39,17 @@ export const userSlice = createSlice({
     currentUser: JSON.parse(localStorage.getItem('user')) || null,
     pending: null,
     error: false,
+    friend: null
   },
   reducers: {
-    FOLLOW: (state, action) => { state.currentUser.followings.push(action.payload) },
-    UNFOLLOW: (state, action) => { state.currentUser.followings.filter(el => el !== action.payload) },
-    TAKENEWDATA: (state) => { state.currentUser = JSON.parse(localStorage.getItem('user')) },
+    isFRIEND: (state, action) => { state.friend = state.currentUser.followings.includes(action.payload) },
+    FOLLOW: (state, action) => { state.currentUser.followings.push(action.payload)},
+    UNFOLLOW: (state, action) => {
+      state.currentUser = {
+        ...state.currentUser,
+        followings: state.currentUser.followings.filter(el => el !== action.payload)
+      }
+    },
   },
   extraReducers: {
     [loginCall.pending]: state => {
@@ -75,5 +79,5 @@ export const userSlice = createSlice({
   }
 })
 
-export const { FOLLOW, UNFOLLOW, UPDATE_USER, TAKENEWDATA } = userSlice.actions
+export const { FOLLOW, UNFOLLOW, UPDATE_USER, isFRIEND } = userSlice.actions
 export default userSlice.reducer
