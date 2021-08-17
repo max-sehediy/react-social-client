@@ -1,10 +1,7 @@
 import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { Add, Remove } from "@material-ui/icons";
@@ -15,9 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FOLLOW, isFRIEND, UNFOLLOW } from "../../store-redux/user/user";
 import { getConversations } from "../../store-redux/conversation/conversationStore";
 
-
 export default function Rightbar({ user }) {
-
   const dispatch = useDispatch();
   const history = useHistory();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -32,9 +27,9 @@ export default function Rightbar({ user }) {
     const getFriends = async () => {
       try {
         const friendList = await axiosJWT.get("/users/friends/" + user._id);
-        return setFriends(friendList.data);
+        setFriends(friendList.data);
       } catch (err) {
-        return console.log(err.response);
+        console.log(err);
       }
     };
     getFriends();
@@ -65,7 +60,6 @@ export default function Rightbar({ user }) {
     try {
       if (friend) {
         dispatch(UNFOLLOW(user._id));
-        console.log("unfollow");
         await axios.put(`/users/${user._id}/unfollow`, {
           userId: currentUser._id,
         });
@@ -74,7 +68,6 @@ export default function Rightbar({ user }) {
           userId: currentUser._id,
         });
         dispatch(FOLLOW(user._id));
-        console.log("follow");
       }
     } catch (err) {
       console.log("follow/unFollow", err.response);
@@ -99,7 +92,7 @@ export default function Rightbar({ user }) {
       </>
     );
   };
-  
+
   const ProfileRightbar = () => {
     return (
       <>

@@ -9,7 +9,6 @@ export const axiosJWT = axios.create({
 axiosJWT.interceptors.request.use(async (config) => {
   let currentDate = Date.now()
   const decodetToken = jwt_decode(JSON.parse(localStorage.getItem('tokens')).accessToken)
-  console.log(config.url)
   if (decodetToken.exp * 1000 < currentDate) {
     const newAccessToken = await refreshTokens()
     config.headers['authorization'] = `Bearer ${newAccessToken}`

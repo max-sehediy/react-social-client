@@ -27,7 +27,6 @@ export default function Feed({ username }) {
       }
     };
     fetchPosts();
-    console.log('fetch post')
   }, [username, user._id]);
 
   return (

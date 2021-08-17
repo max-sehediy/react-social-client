@@ -29,7 +29,6 @@ export default function Register() {
       } catch (err) {
         console.log(err.response);
       }
-      console.log(user);
     }
   };
 
