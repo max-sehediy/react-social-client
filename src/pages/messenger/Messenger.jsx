@@ -4,12 +4,10 @@ import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import {
-  // useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
-// import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
@@ -23,9 +21,7 @@ export default function Messenger() {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
-  // const { user } = useContext(AuthContext);
   const scrollRef = useRef();
-
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (data) => {
@@ -86,7 +82,6 @@ export default function Messenger() {
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
     );
-
     socket.current.emit("sendMessage", {
       senderId: user._id,
       receiverId,

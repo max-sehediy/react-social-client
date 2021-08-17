@@ -1,8 +1,5 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { logout } from "./logout";
-
-
 
 
 export const refreshTokens = async () => {
@@ -23,8 +20,5 @@ export const refreshTokens = async () => {
 
   } catch (error) {
     console.log('refresh=>', error.response)
-    if (error.response.status === 403) {
-      return logout()
-    }
   }
 }
