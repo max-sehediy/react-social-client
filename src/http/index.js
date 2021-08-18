@@ -4,6 +4,7 @@ import { refreshTokens } from './refresh';
 
 
 export const axiosJWT = axios.create({
+  baseURL: 'https://apirestsocial.herokuapp.com/api'
 })
 
 axiosJWT.interceptors.request.use(async (config) => {
