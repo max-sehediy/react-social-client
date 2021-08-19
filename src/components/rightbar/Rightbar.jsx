@@ -19,17 +19,20 @@ export default function Rightbar({ user }) {
   const currentUser = useSelector((state) => state.user.currentUser);
   const friend = useSelector((state) => state.user.friend);
   const conversation = useSelector((state) => state.conversation);
-  const [sameUser, setSameUser] = useState(currentUser?._id === user?._id);
+  const [sameUser, setSameUser] = useState(false);
   const [userDataVisible, setUserDataVisible] = useState(false);
-
+  console.log(sameUser);
   useEffect(() => {
     const getFriends = async () => {
-      try {
-        const friendList = await $authHost.get("/users/friends/" + user._id);
-        setFriends(friendList.data);
-      } catch (err) {
-        console.log(err);
+      if (user?._id !== undefined) {
+        try {
+          const friendList = await $authHost.get("/users/friends/" + user._id);
+          setFriends(friendList.data);
+        } catch (err) {
+          console.log(err.response);
+        }
       }
+      setSameUser(currentUser?._id === user?._id);
     };
     getFriends();
     dispatch(isFRIEND(user?._id));

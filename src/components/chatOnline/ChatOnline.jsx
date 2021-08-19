@@ -9,8 +9,12 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
 
   useEffect(() => {
     const getFriends = async () => {
-      const res = await $host.get("/users/friends/" + currentId);
-      setFriends(res.data);
+      try {
+        const res = await $host.get("/users/friends/" + currentId);
+        setFriends(res.data);
+      } catch (error) {
+        console.log("chatOnline", error);
+      }
     };
 
     getFriends();

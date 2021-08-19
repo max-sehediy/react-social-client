@@ -1,4 +1,4 @@
-import "./messenger.css";
+import "./messanger.css";
 import Topbar from "../../components/topbar/Topbar";
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { $host, socketPath } from "../../http";
 
-export default function Messenger() {
+export default function Messanger() {
   const user = useSelector((state) => state.user.currentUser);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -20,13 +20,17 @@ export default function Messenger() {
   const scrollRef = useRef();
   useEffect(() => {
     socket.current = io(socketPath);
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+    try {
+      socket.current.on("getMessage", (data) => {
+        setArrivalMessage({
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        });
       });
-    });
+    } catch (error) {
+      console.log("getMessage", error);
+    }
   }, []);
   useEffect(() => {
     arrivalMessage &&
@@ -36,11 +40,15 @@ export default function Messenger() {
 
   useEffect(() => {
     socket.current.emit("addUser", user._id);
-    socket.current.on("getUsers", (users) => {
-      setOnlineUsers(
-        user.followings.filter((f) => users.some((u) => u.userId === f))
-      );
-    });
+    try {
+      socket.current.on("getUsers", (users) => {
+        setOnlineUsers(
+          user.followings.filter((f) => users.some((u) => u.userId === f))
+        );
+      });
+    } catch (error) {
+      console.log("getUsers", error);
+    }
   }, [user]);
 
   useEffect(() => {

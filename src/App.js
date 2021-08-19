@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 // import { useContext } from "react";
 // import { AuthContext } from "./context/AuthContext";
-import Messenger from "./pages/messenger/Messenger";
+import Messanger from "./pages/messanger/Messanger";
 import { useSelector } from 'react-redux'
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
           {user ? <Redirect to="/" /> : <Register />}
         </Route>
         <Route path="/messenger">
-          {!user ? <Redirect to="/" /> : <Messenger />}
+          {!user ? <Redirect to="/" /> : <Messanger />}
         </Route>
         <Route path="/profile/:username">
           {user ? <Profile /> : <Register />}
