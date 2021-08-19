@@ -4,7 +4,6 @@ import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { $host, socketPath } from "../../http";
@@ -86,7 +85,7 @@ export default function Messenger() {
     });
 
     try {
-      const res = await axios.post("/messages", message);
+      const res = await $host.post("/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {

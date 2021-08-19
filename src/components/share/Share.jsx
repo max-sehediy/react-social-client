@@ -8,8 +8,8 @@ import {
 } from "@material-ui/icons";
 import { 
    useRef, useState } from "react";
-import axios from "axios";
 import { useSelector } from 'react-redux'
+import { $host } from "../../http";
 
 export default function Share() {
   const user = useSelector(state => state.user.currentUser)
@@ -29,13 +29,13 @@ export default function Share() {
       data.append("file", file, fileName);
       newPost.img = fileName;
       try {
-        await axios.post("/upload", data);
+        await $host.post("/upload", data);
       } catch (err) {
         console.log(err.message);
       }
     }
     try {
-      await axios.post("/posts", newPost);
+      await $host.post("/posts", newPost);
       window.location.reload();
     } catch (err) {
       console.log(err.message);

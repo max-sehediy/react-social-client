@@ -2,12 +2,11 @@ import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { Add, Remove } from "@material-ui/icons";
 import EditUserData from "../../utils/modal/editUser/EditUserData";
 import EditIcon from "@material-ui/icons/Edit";
-import { $authHost } from "../../http";
+import { $authHost, $host } from "../../http";
 import { useDispatch, useSelector } from "react-redux";
 import { FOLLOW, isFRIEND, UNFOLLOW } from "../../store-redux/user/user";
 import { getConversations } from "../../store-redux/conversation/conversationStore";
@@ -42,7 +41,7 @@ export default function Rightbar({ user }) {
     createConversation && history.push("/messenger");
     if (!createConversation) {
       try {
-        const { data } = await axios.post("/conversations/", {
+        const { data } = await $host.post("/conversations/", {
           senderId: currentUser._id,
           receiverId: user._id,
         });
@@ -60,11 +59,11 @@ export default function Rightbar({ user }) {
     try {
       if (friend) {
         dispatch(UNFOLLOW(user._id));
-        await axios.put(`/users/${user._id}/unfollow`, {
+        await $host.put(`/users/${user._id}/unfollow`, {
           userId: currentUser._id,
         });
       } else {
-        await axios.put(`/users/${user._id}/follow`, {
+        await $host.put(`/users/${user._id}/follow`, {
           userId: currentUser._id,
         });
         dispatch(FOLLOW(user._id));

@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { $host } from "../../http";
 
 export const loginCall = createAsyncThunk(
   'user/loginCall',
   async (userCredential, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/auth/login", userCredential);
+      const { data } = await $host.post("/auth/login", userCredential);
       const decode_accessToken = jwt_decode((data).accessToken)
       localStorage.setItem('tokens', JSON.stringify(data))
       localStorage.setItem('user', JSON.stringify(decode_accessToken.user))
@@ -21,7 +21,7 @@ export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (newUserData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put('/users/' + newUserData.userId, newUserData);
+      const { data } = await $host.put('/users/' + newUserData.userId, newUserData);
       localStorage.setItem('user', JSON.stringify(data))
       return data
 

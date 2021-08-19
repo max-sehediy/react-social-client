@@ -2,7 +2,6 @@ import "./post.css";
 import { MoreVert } from "@material-ui/icons";
 import { 
    useEffect, useState } from "react";
-import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -32,7 +31,7 @@ export default function Post({ post }) {
 
   const likeHandler = () => {
     try {
-      axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
+      $host.put("/posts/" + post._id + "/like", { userId: currentUser._id });
     } catch (err) {}
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);

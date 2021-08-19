@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { $host } from "../../http";
 import "./conversation.css";
 
 export default function Conversation({ conversation, currentUser }) {
@@ -8,10 +8,9 @@ export default function Conversation({ conversation, currentUser }) {
 
   useEffect(() => {
     const friendId = conversation.members.find((m) => m !== currentUser._id);
-
     const getUser = async () => {
       try {
-        const res = await axios("/users?userId=" + friendId);
+        const res = await $host.get("/users?userId=" + friendId);
         setUser(res.data);
       } catch (err) {
         console.log(err);
