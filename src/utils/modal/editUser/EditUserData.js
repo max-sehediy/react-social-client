@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   updateUser,
 } from '../../../store-redux/user/user';
-import { axiosJWT } from '../../../http';
+import { $authHost } from '../../../http';
 
 
 
@@ -47,7 +47,7 @@ export default function EditUserData({ onHide, show }) {
       data.append('file', file, fileName)
       profPict = fileName
       try {
-        await axiosJWT.post('/upload', data)
+        await $authHost.post('/upload', data)
       } catch (error) {
         console.log(error)
       }

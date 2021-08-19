@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { $host } from "../../http";
 
 export const viewUserFetch = createAsyncThunk(
   'getviewUser/fetch',
   async (username) => {
-    const { data } = await axios.get('/users?username=' + username)
+    const { data } = await $host.get('/users?username=' + username)
     return data
   })
 

@@ -1,9 +1,9 @@
-import { axiosJWT } from ".";
+import { $authHost } from ".";
 
 
 export const deleteUser = async () => {
   try {
-    const { data } = await axiosJWT.delete('/auth/login/' + '60ff062094b2971c0c7d91d8',
+    const { data } = await $authHost.delete('/auth/login/' + '60ff062094b2971c0c7d91d8',
       {
         data: {
           refreshToken: JSON.parse(localStorage.getItem('tokens')).refreshToken,

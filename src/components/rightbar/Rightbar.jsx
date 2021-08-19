@@ -7,7 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Add, Remove } from "@material-ui/icons";
 import EditUserData from "../../utils/modal/editUser/EditUserData";
 import EditIcon from "@material-ui/icons/Edit";
-import { axiosJWT } from "../../http";
+import { $authHost } from "../../http";
 import { useDispatch, useSelector } from "react-redux";
 import { FOLLOW, isFRIEND, UNFOLLOW } from "../../store-redux/user/user";
 import { getConversations } from "../../store-redux/conversation/conversationStore";
@@ -26,7 +26,7 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const friendList = await axiosJWT.get("/users/friends/" + user._id);
+        const friendList = await $authHost.get("/users/friends/" + user._id);
         setFriends(friendList.data);
       } catch (err) {
         console.log(err);

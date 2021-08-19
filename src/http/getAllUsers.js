@@ -1,8 +1,8 @@
-import { axiosJWT } from ".";
+import { $authHost } from ".";
 
 export const allUsers = async () => {
   try {
-    const { data } = await axiosJWT.get('/users/all')
+    const { data } = await $authHost.get('/users/all')
     return data
   } catch (error) {
     
