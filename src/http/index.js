@@ -2,12 +2,16 @@ import axios from 'axios'
 import jwt_decode from "jwt-decode";
 import { refreshTokens } from './refresh';
 
+export const socketPath = 'https://socketsocial.herokuapp.com/'
 
-export const axiosJWT = axios.create({
+export const $host = axios.create({
+  baseURL: 'https://apirestsocial.herokuapp.com/api'
+})
+export const $authHost = axios.create({
   baseURL: 'https://apirestsocial.herokuapp.com/api'
 })
 
-axiosJWT.interceptors.request.use(async (config) => {
+$authHost.interceptors.request.use(async (config) => {
   let currentDate = Date.now()
   const decodetToken = jwt_decode(JSON.parse(localStorage.getItem('tokens')).accessToken)
   if (decodetToken.exp * 1000 < currentDate) {

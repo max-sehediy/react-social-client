@@ -1,11 +1,11 @@
-import axios from "axios";
+import { $host } from "../../http";
 
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
 
 export const getConversations = createAsyncThunk('conversation/getCurrentUser',
   async (userId) => {
-    const { data } = await axios.get('/conversations/' + userId+'/friends');
+    const { data } = await $host.get('/conversations/' + userId+'/friends');
     return data
   })
 

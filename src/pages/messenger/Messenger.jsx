@@ -3,14 +3,11 @@ import Topbar from "../../components/topbar/Topbar";
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { $host, socketPath } from "../../http";
 
 export default function Messenger() {
   const user = useSelector((state) => state.user.currentUser);
@@ -23,7 +20,7 @@ export default function Messenger() {
   const socket = useRef();
   const scrollRef = useRef();
   useEffect(() => {
-    socket.current = io("ws://localhost:8900");
+    socket.current = io(socketPath);
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
@@ -50,7 +47,7 @@ export default function Messenger() {
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get("/conversations/" + user._id);
+        const res = await $host.get("/conversations/" + user._id);
         setConversations(res.data);
       } catch (err) {
         console.log(err);
@@ -62,7 +59,7 @@ export default function Messenger() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get("/messages/" + currentChat?._id);
+        const res = await $host.get("/messages/" + currentChat?._id);
         setMessages(res.data);
       } catch (err) {
         console.log(err.response);

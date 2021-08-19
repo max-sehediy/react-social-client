@@ -6,6 +6,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { $host } from "../../http";
 
 
 export default function Post({ post }) {
@@ -23,7 +24,7 @@ export default function Post({ post }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?userId=${post.userId}`);
+      const res = await $host.get(`/users?userId=${post.userId}`);
       setUser(res.data);
     };
     fetchUser();

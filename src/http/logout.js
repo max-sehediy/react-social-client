@@ -1,10 +1,10 @@
-import axios from "axios";
+import { $host } from ".";
 
 
 
 export const logout = async () => {
   try {
-    const { data } = await axios.post("/auth/login/logout", {
+    const { data } = await $host.post("/auth/login/logout", {
       data: {
         id: JSON.parse(localStorage.getItem('tokens')).id
       },
@@ -16,6 +16,6 @@ export const logout = async () => {
     }
     else return data
   } catch (error) {
-    console.log( 'logout',error.response);
+    console.log('logout', error.response);
   }
 };
