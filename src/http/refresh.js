@@ -1,11 +1,11 @@
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { $host } from ".";
 
 
 export const refreshTokens = async () => {
   const tokens = JSON.parse(localStorage.getItem('tokens'))
   try {
-    const { data } = await axios.post('/auth/login/refresh',
+    const { data } = await $host.post('/auth/login/refresh',
       {
         refreshToken: tokens.refreshToken,
         accessToken: tokens.accessToken,

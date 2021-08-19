@@ -1,10 +1,10 @@
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { $host } from "./http";
 
 export const loginCall = async (userCredential, dispatch) => {
   dispatch({ type: "LOGIN_START" });
   try {
-    const response = await axios.post("/auth/login", userCredential);
+    const response = await $host.post("/auth/login", userCredential);
     const { data } = response
     const user = jwt_decode(data.accessToken)
     localStorage.setItem('tokens', JSON.stringify(data))
